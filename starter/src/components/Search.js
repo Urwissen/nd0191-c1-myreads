@@ -26,7 +26,7 @@ const Search = () => {
                 </ol>
             </div>
         </div>
-    )
+    );
 }
 
 export default Search

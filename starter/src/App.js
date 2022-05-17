@@ -1,13 +1,55 @@
 import "./App.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BookShelf from "./components/BookShelf";
 import Search from "./components/Search";
+import * as BooksAPI from "./BooksAPI";
 
 function App() {
   const [showSearchPage, setShowSearchpage] = useState(false);
-  const [currentlyReading, setCurrentlyReading] = useState([])
-  const [wantToRead, setWandToRead] = useState([])
-  const [read, setRead] = useState([])
+  const [currentlyReading, setCurrentlyReading] = useState([]);
+  const [wantToRead, setWandToRead] = useState([]);
+  const [read, setRead] = useState([]);
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    fetchData()
+  }, []);
+
+
+  const fetchData = async() => {
+    try {
+      setIsLoading(true)
+      const response = await BooksAPI.getAll()
+      console.log(response)
+      await response.forEach(book => {
+        console.log(book)
+        switch(book.shelf){
+          case "currentlyReading":
+            setCurrentlyReading(prev => [...prev, book]);
+            break;
+          case "wantToRead":
+            setWandToRead(prev => [...prev, book]);
+            break;
+          case "read":
+            setRead(prev => [...prev, book]);
+            break;
+          default:
+            return;
+        };
+      });
+    } catch(error) {
+      console.log(error)
+    } finally {
+      setIsLoading(false)
+    }
+
+    
+  }
+
+  console.log(currentlyReading)
+  console.log(wantToRead)
+  console.log(read)
+
 
   return (
     <div className="app">
@@ -19,11 +61,11 @@ function App() {
             <h1>MyReads</h1>
           </div>
           <div className="list-books-content">
-            <div>
-              <BookShelf title="Currently Reading"/>
-              <BookShelf title="Want to Read"/>
-              <BookShelf title="Read"/>
-            </div>
+            {!isLoading ? <div>
+              <BookShelf shelfTitle="Currently Reading" books={currentlyReading}/>
+              <BookShelf shelfTitle="Want to Read" books={wantToRead}/>
+              <BookShelf shelfTitle="Read" books={read}/>
+            </div> : <h3>Loading...</h3>}
           </div>
           <div className="open-search">
             <a onClick={() => setShowSearchpage(!showSearchPage)}>Add a book</a>
@@ -166,7 +208,7 @@ export default App;
                               width: 128,
                               height: 192,
                               backgroundImage:
-                                'url("http://books.google.com/books/content?id=wrOQLV6xB-wC&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE72G3gA5A-Ka8XjOZGDFLAoUeMQBqZ9y-LCspZ2dzJTugcOcJ4C7FP0tDA8s1h9f480ISXuvYhA_ZpdvRArUL-mZyD4WW7CHyEqHYq9D3kGnrZCNiqxSRhry8TiFDCMWP61ujflB&source=gbs_api")',
+                                'url()',
                             }}
                           ></div>
                           <div className="book-shelf-changer">
