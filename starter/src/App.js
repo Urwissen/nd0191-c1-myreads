@@ -6,14 +6,22 @@ import * as BooksAPI from "./BooksAPI";
 
 function App() {
   const [showSearchPage, setShowSearchpage] = useState(false);
-  const [currentlyReading, setCurrentlyReading] = useState([]);
-  const [wantToRead, setWandToRead] = useState([]);
-  const [read, setRead] = useState([]);
+  const [allBooks, setAllBooks] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     fetchData()
   }, []);
+
+  const changeShelf = (book, shelf) => {
+    BooksAPI.update(book, shelf)
+    setAllBooks(prevBooks => prevBooks.map(prevBook => {
+        console.log(book, prevBook)
+        return(
+            prevBook.id === book.id ? {...prevBook, shelf: shelf} : {...prevBook}
+        )
+    }))
+}
 
 
   const fetchData = async() => {
@@ -21,40 +29,19 @@ function App() {
       setIsLoading(true)
       const response = await BooksAPI.getAll()
       console.log(response)
-      await response.forEach(book => {
-        console.log(book)
-        switch(book.shelf){
-          case "currentlyReading":
-            setCurrentlyReading(prev => [...prev, book]);
-            break;
-          case "wantToRead":
-            setWandToRead(prev => [...prev, book]);
-            break;
-          case "read":
-            setRead(prev => [...prev, book]);
-            break;
-          default:
-            return;
-        };
-      });
+      setAllBooks(await response)
     } catch(error) {
       console.log(error)
     } finally {
       setIsLoading(false)
     }
-
-    
   }
 
-  console.log(currentlyReading)
-  console.log(wantToRead)
-  console.log(read)
-
-
+  console.log("allBooks:", allBooks)
   return (
     <div className="app">
       {showSearchPage ? (
-        <Search />
+        <Search changeShelf={changeShelf} setShowSearchpage={setShowSearchpage } showSearchPage={showSearchPage} />
       ) : (
         <div className="list-books">
           <div className="list-books-title">
@@ -62,9 +49,9 @@ function App() {
           </div>
           <div className="list-books-content">
             {!isLoading ? <div>
-              <BookShelf shelfTitle="Currently Reading" books={currentlyReading}/>
-              <BookShelf shelfTitle="Want to Read" books={wantToRead}/>
-              <BookShelf shelfTitle="Read" books={read}/>
+              <BookShelf shelfTitle="Currently Reading" books={allBooks.filter(book => book.shelf === "currentlyReading")} changeShelf={changeShelf}/>
+              <BookShelf shelfTitle="Want to Read" books={allBooks.filter(book => book.shelf === "wantToRead")} changeShelf={changeShelf}/>
+              <BookShelf shelfTitle="Read" books={allBooks.filter(book => book.shelf === "read")} changeShelf={changeShelf}/>
             </div> : <h3>Loading...</h3>}
           </div>
           <div className="open-search">

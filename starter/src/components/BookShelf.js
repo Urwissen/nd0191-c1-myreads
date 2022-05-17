@@ -1,7 +1,7 @@
 import React from 'react'
 import Book from './Book'
 
-const BookShelf = ({shelfTitle, books}) => {
+const BookShelf = ({shelfTitle, books, changeShelf}) => {
     console.log(shelfTitle, books)
 
 
@@ -12,10 +12,15 @@ const BookShelf = ({shelfTitle, books}) => {
                 <ol className="books-grid">        
                     {books.map(book => {
                         return(
-                            <>
-                                <Book key={book.id} url={book.imageLinks.thumbnail} title={book.title} author={book.authors[0]} />
-                            </>
-                            
+                            <Book 
+                                key={book.id}
+                                id={book.id}
+                                url={book.imageLinks.thumbnail} 
+                                title={book.title} 
+                                author={book.authors[0]}
+                                shelf={book.shelf}
+                                changeShelf={changeShelf}
+                            />
                         )
                     })}     
                 </ol>
