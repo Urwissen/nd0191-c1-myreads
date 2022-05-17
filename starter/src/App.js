@@ -1,13 +1,42 @@
 import "./App.css";
 import { useState } from "react";
+import BookShelf from "./components/BookShelf";
+import Search from "./components/Search";
 
 function App() {
   const [showSearchPage, setShowSearchpage] = useState(false);
+  const [currentlyReading, setCurrentlyReading] = useState([])
+  const [wantToRead, setWandToRead] = useState([])
+  const [read, setRead] = useState([])
 
   return (
     <div className="app">
       {showSearchPage ? (
-        <div className="search-books">
+        <Search />
+      ) : (
+        <div className="list-books">
+          <div className="list-books-title">
+            <h1>MyReads</h1>
+          </div>
+          <div className="list-books-content">
+            <div>
+              <BookShelf title="Currently Reading"/>
+              <BookShelf title="Want to Read"/>
+              <BookShelf title="Read"/>
+            </div>
+          </div>
+          <div className="open-search">
+            <a onClick={() => setShowSearchpage(!showSearchPage)}>Add a book</a>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default App;
+
+ /*  <div className="search-books">
           <div className="search-books-bar">
             <a
               className="close-search"
@@ -25,15 +54,9 @@ function App() {
           <div className="search-books-results">
             <ol className="books-grid"></ol>
           </div>
-        </div>
-      ) : (
-        <div className="list-books">
-          <div className="list-books-title">
-            <h1>MyReads</h1>
-          </div>
-          <div className="list-books-content">
-            <div>
-              <div className="bookshelf">
+        </div> */
+
+{/*  <div className="bookshelf">
                 <h2 className="bookshelf-title">Currently Reading</h2>
                 <div className="bookshelf-books">
                   <ol className="books-grid">
@@ -268,17 +291,4 @@ function App() {
                       </div>
                     </li>
                   </ol>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="open-search">
-            <a onClick={() => setShowSearchpage(!showSearchPage)}>Add a book</a>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-export default App;
+                </div> */}
