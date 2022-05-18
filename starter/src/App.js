@@ -1,8 +1,9 @@
 import "./App.css";
 import { useEffect, useState } from "react";
-import BookShelf from "./components/BookShelf";
 import Search from "./components/Search";
+import ListBooks from "./components/ListBooks";
 import * as BooksAPI from "./BooksAPI";
+import {Route, Routes } from "react-router-dom";
 
 function App() {
   const [showSearchPage, setShowSearchpage] = useState(false);
@@ -13,14 +14,20 @@ function App() {
     fetchData()
   }, []);
 
-  const changeShelf = (book, shelf) => {
+
+  const changeShelf = (book, shelf, addBook) => {
     BooksAPI.update(book, shelf)
-    setAllBooks(prevBooks => prevBooks.map(prevBook => {
+    if (addBook) {
+      setAllBooks(prev => [...prev, book])
+    } else {
+      setAllBooks(prevBooks => prevBooks.map(prevBook => {
         console.log(book, prevBook)
         return(
             prevBook.id === book.id ? {...prevBook, shelf: shelf} : {...prevBook}
         )
-    }))
+      }))
+    }
+    
 }
 
 
@@ -40,25 +47,24 @@ function App() {
   console.log("allBooks:", allBooks)
   return (
     <div className="app">
-      {showSearchPage ? (
-        <Search changeShelf={changeShelf} setShowSearchpage={setShowSearchpage } showSearchPage={showSearchPage} />
-      ) : (
-        <div className="list-books">
-          <div className="list-books-title">
-            <h1>MyReads</h1>
-          </div>
-          <div className="list-books-content">
-            {!isLoading ? <div>
-              <BookShelf shelfTitle="Currently Reading" books={allBooks.filter(book => book.shelf === "currentlyReading")} changeShelf={changeShelf}/>
-              <BookShelf shelfTitle="Want to Read" books={allBooks.filter(book => book.shelf === "wantToRead")} changeShelf={changeShelf}/>
-              <BookShelf shelfTitle="Read" books={allBooks.filter(book => book.shelf === "read")} changeShelf={changeShelf}/>
-            </div> : <h3>Loading...</h3>}
-          </div>
-          <div className="open-search">
-            <a onClick={() => setShowSearchpage(!showSearchPage)}>Add a book</a>
-          </div>
-        </div>
-      )}
+        <Routes>
+          <Route path="/search" 
+            element={
+              <Search 
+                changeShelf={changeShelf} 
+                setShowSearchpage={setShowSearchpage } 
+                showSearchPage={showSearchPage} />} 
+              />
+          <Route exact path="/" 
+            element={
+              <ListBooks 
+                isLoading={isLoading}
+                allBooks={allBooks} 
+                changeShelf={changeShelf} />} 
+              />  
+        </Routes>
+        
+        
     </div>
   );
 }

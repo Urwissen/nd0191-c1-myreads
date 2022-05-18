@@ -1,11 +1,11 @@
 import React from 'react'
 
-const Book = ({url, title, author, changeShelf, id, shelf}) => {
+const Book = ({book, url, title, author, changeShelf, id, shelf = "none", addNewBook = false}) => {
 
     const handleChange = (e) => {
         const shelf = e.target.value
         console.log("change shelf to:", shelf)
-        changeShelf({id: id}, shelf)
+        changeShelf(book, shelf, addNewBook)
     }
 
     return (
