@@ -2,6 +2,7 @@ const api = 'https://reactnd-books-api.udacity.com';
 
 let { token } = localStorage;
 
+// eslint-disable-next-line no-multi-assign
 if (!token) token = localStorage.token = Math.random().toString(36).substr(-8);
 
 const headers = {

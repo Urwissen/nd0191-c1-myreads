@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 function Book({
-  book, url, title, author, changeShelf, shelf = 'none', addNewBook = false,
+  book, url, title, author, changeShelf, shelf, addNewBook,
 }) {
   const handleChange = (e) => {
     const shelfValue = e.target.value;
@@ -44,5 +44,20 @@ function Book({
     </div>
   );
 }
+
+Book.propTypes = {
+  book: PropTypes.element.isRequired,
+  url: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  author: PropTypes.string.isRequired,
+  changeShelf: PropTypes.func.isRequired,
+  shelf: PropTypes.string,
+  addNewBook: PropTypes.bool,
+};
+
+Book.defaultProps = {
+  shelf: 'none',
+  addNewBook: false,
+};
 
 export default Book;

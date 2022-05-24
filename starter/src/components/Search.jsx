@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import * as BooksAPI from '../BooksAPI';
 import BookShelf from './BookShelf';
 
-function Search({ changeShelf, setShowSearchpage, showSearchPage }) {
+function Search({ changeShelf }) {
   const [allBooks, setAllBooks] = useState([]);
   const [isLoading, setIsLoading] = useState([]);
   const [input, setInput] = useState('');
@@ -12,17 +13,6 @@ function Search({ changeShelf, setShowSearchpage, showSearchPage }) {
   const handleInput = (e) => {
     setInput(e.target.value);
   };
-
-  useEffect(() => {
-    let mounted = true;
-    let result = [];
-    if (input && mounted) {
-      setIsLoading(true);
-      result = fetchData(input, 20);
-    }
-    result.length > 0 && mounted && setAllBooks(result);
-    return () => mounted = false;
-  }, [input]);
 
   const fetchData = async (query, maxResults) => {
     try {
@@ -41,6 +31,17 @@ function Search({ changeShelf, setShowSearchpage, showSearchPage }) {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    let mounted = true;
+    let result = [];
+    if (input && mounted) {
+      setIsLoading(true);
+      result = fetchData(input, 20);
+    }
+    if (result.length > 0 && mounted) setAllBooks(result);
+    return () => { mounted = false; };
+  }, [input]);
 
   return (
     <div className="search-books">
@@ -71,5 +72,9 @@ function Search({ changeShelf, setShowSearchpage, showSearchPage }) {
     </div>
   );
 }
+
+Search.propTypes = {
+  changeShelf: PropTypes.func.isRequired,
+};
 
 export default Search;

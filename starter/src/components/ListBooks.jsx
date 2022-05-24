@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import BookShelf from './BookShelf';
 
 function ListBooks({ isLoading, allBooks, changeShelf }) {
@@ -23,5 +24,11 @@ function ListBooks({ isLoading, allBooks, changeShelf }) {
     </div>
   );
 }
+
+ListBooks.propTypes = {
+  isLoading: PropTypes.bool.isRequired,
+  allBooks: PropTypes.arrayOf.isRequired,
+  changeShelf: PropTypes.func.isRequired,
+};
 
 export default ListBooks;
