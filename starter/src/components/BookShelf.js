@@ -2,9 +2,6 @@ import React from 'react'
 import Book from './Book'
 
 const BookShelf = ({shelfTitle, books, changeShelf, addNewBook}) => {
-    console.log(shelfTitle, books)
-
-
     return (
         <div className="bookshelf">
             <h2 className="bookshelf-title">{shelfTitle}</h2>

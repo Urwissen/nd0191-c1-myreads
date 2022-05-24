@@ -12,29 +12,16 @@ const Search = ({changeShelf,setShowSearchpage, showSearchPage}) => {
     const handleInput = (e) => {
         setInput(e.target.value)
     }
-
-    const dummyBook = [{
-        id: 11123567,
-        imageLinks: {thumbnail: "http://books.google.com/books/content?id=uu1mC6zWNTwC&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE73pGHfBNSsJG9Y8kRBpmLUft9O4BfItHioHolWNKOdLavw-SLcXADy3CPAfJ0_qMb18RmCa7Ds1cTdpM3dxAGJs8zfCfm8c6ggBIjzKT7XR5FIB53HHOhnsT7a0Cc-PpneWq9zX&source=gbs_api" } ,
-        title: "NO RESULTS",
-        authors: ["🥹"],
-        shelf: "none",
-    }]
-
     
     useEffect(() => {
         let mounted = true
         let result = []
         if(input && mounted) {
-            console.log("if is running! with Input:", input)
             setIsLoading(true)
             result = fetchData(input, 20)
         }
-        console.log(result)
         result.length > 0 && mounted && setAllBooks(result)
-        
         return () => mounted = false
-        
     }, [input])
 
     const fetchData = async(query, maxResults) => {
@@ -43,17 +30,14 @@ const Search = ({changeShelf,setShowSearchpage, showSearchPage}) => {
             const response = await BooksAPI.search(query, maxResults)
             console.log(response)
             if (response.error) {
-                console.log("Reponse with error!")
                 setNoResults(true)
-                
             } else {
                 setNoResults(false)
                 setAllBooks(await response)
             }
             
         } catch(error) {
-            
-            console.log("Fetch Error:", error)
+            console.error("Fetch Error:", error)
         } finally {
             setIsLoading(false)
         }
