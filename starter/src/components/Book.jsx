@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 function Book({
   book, url, title, author, changeShelf, shelf = 'none', addNewBook = false,
